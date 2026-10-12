@@ -105,6 +105,9 @@ fun ProfileScreen(viewModel: EarnViewModel) {
                     ProfileMenuRow(title = "Daily Streak Calendar", icon = Icons.Default.LocalFireDepartment) {
                         viewModel.navigateTo("streak")
                     }
+                    ProfileMenuRow(title = "Rewarded Ads & Monetization", icon = Icons.Default.PlayCircle) {
+                        viewModel.navigateTo("rewarded_ads")
+                    }
                     ProfileMenuRow(title = "Achievements & Badges", icon = Icons.Default.EmojiEvents) {
                         viewModel.navigateTo("achievements")
                     }

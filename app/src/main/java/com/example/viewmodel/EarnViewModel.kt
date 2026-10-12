@@ -273,6 +273,31 @@ class EarnViewModel : ViewModel() {
         _adminSettings.value = settings
     }
 
+    fun updateAdConfig(config: AdNetworkConfig) {
+        _adminSettings.update { it.copy(adConfig = config) }
+    }
+
+    fun watchRewardedAd(): Boolean {
+        val config = _adminSettings.value.adConfig
+        if (!config.isAdEnabled || !config.rewardedAdsAvailable || config.publisherId.isBlank() || config.rewardedAdUnitId.isBlank()) {
+            return false
+        }
+        val reward = config.rewardedPoints
+        val updatedUser = _currentUser.value.copy(points = _currentUser.value.points + reward)
+        _currentUser.value = updatedUser
+        _usersList.update { list -> list.map { if (it.id == updatedUser.id) updatedUser else it } }
+
+        addTransaction(Transaction(
+            id = "tx_${System.currentTimeMillis()}",
+            title = "Rewarded Video Ad (${config.adNetworkName})",
+            points = reward,
+            timestamp = getFormattedDate(),
+            type = "ad_reward",
+            status = "Verified & Completed"
+        ))
+        return true
+    }
+
     fun toggleUserSuspension(userId: String) {
         _usersList.update { list ->
             list.map { if (it.id == userId) it.copy(isSuspended = !it.isSuspended) else it }

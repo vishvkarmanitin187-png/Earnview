@@ -38,7 +38,7 @@ data class Transaction(
     val title: String,
     val points: Int,
     val timestamp: String,
-    val type: String, // "earned", "withdrawn", "bonus"
+    val type: String, // "earned", "withdrawn", "bonus", "ad_reward"
     val status: String // "Completed", "Pending", "Rejected"
 )
 
@@ -47,7 +47,7 @@ data class WithdrawalRequest(
     val userId: String,
     val userName: String,
     val upiId: String,
-    val amount: Int, // points or INR value
+    val amount: Int,
     val pointsDeducted: Int,
     val status: String, // "Pending", "Approved", "Paid", "Rejected"
     val requestDate: String
@@ -78,9 +78,21 @@ data class Referral(
     val pointsEarned: Int
 )
 
+data class AdNetworkConfig(
+    val adNetworkName: String = "Google AdSense / AdMob",
+    val publisherId: String = "",
+    val adUnitId: String = "",
+    val bannerAdUnitId: String = "",
+    val rewardedAdUnitId: String = "",
+    val isAdEnabled: Boolean = false,
+    val rewardedAdsAvailable: Boolean = false,
+    val rewardedPoints: Int = 50
+)
+
 data class AdminSettings(
     val minWithdrawalAmount: Int = 500,
     val dailyTaskLimit: Int = 15,
     val rewardMultiplier: Float = 1.0f,
-    val maintenanceMode: Boolean = false
+    val maintenanceMode: Boolean = false,
+    val adConfig: AdNetworkConfig = AdNetworkConfig()
 )

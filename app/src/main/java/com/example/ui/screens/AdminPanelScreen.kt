@@ -23,10 +23,18 @@ fun AdminPanelScreen(viewModel: EarnViewModel) {
     val users by viewModel.usersList.collectAsState()
     val withdrawals by viewModel.withdrawalsList.collectAsState()
     val settings by viewModel.adminSettings.collectAsState()
+    val adConfig = settings.adConfig
 
     var newTaskTitle by remember { mutableStateOf("") }
     var newTaskReward by remember { mutableStateOf("100") }
     var minWithdrawalInput by remember { mutableStateOf(settings.minWithdrawalAmount.toString()) }
+
+    // Ad config state fields
+    var pubId by remember { mutableStateOf(adConfig.publisherId) }
+    var rewardedUnitId by remember { mutableStateOf(adConfig.rewardedAdUnitId) }
+    var isAdEnabled by remember { mutableStateOf(adConfig.isAdEnabled) }
+    var rewardedAvailable by remember { mutableStateOf(adConfig.rewardedAdsAvailable) }
+    var rewardedPointsStr by remember { mutableStateOf(adConfig.rewardedPoints.toString()) }
 
     Scaffold(
         topBar = {
@@ -61,7 +69,78 @@ fun AdminPanelScreen(viewModel: EarnViewModel) {
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(text = "Administrator Access", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onErrorContainer)
-                            Text(text = "Manage users, withdrawals, tasks, and system parameters.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onErrorContainer)
+                            Text(text = "Manage users, withdrawals, ad monetization, and tasks.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onErrorContainer)
+                        }
+                    }
+                }
+            }
+
+            // Ad Management Section
+            item {
+                Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(text = "Ad Network & Monetization Management", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        OutlinedTextField(
+                            value = pubId,
+                            onValueChange = { pubId = it },
+                            label = { Text("AdSense / AdMob Publisher ID") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        OutlinedTextField(
+                            value = rewardedUnitId,
+                            onValueChange = { rewardedUnitId = it },
+                            label = { Text("Rewarded Ad Unit ID") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        OutlinedTextField(
+                            value = rewardedPointsStr,
+                            onValueChange = { rewardedPointsStr = it },
+                            label = { Text("Points per Rewarded Ad View") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Enable Ads & AdSense")
+                            Switch(checked = isAdEnabled, onCheckedChange = { isAdEnabled = it })
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Rewarded Ads Available")
+                            Switch(checked = rewardedAvailable, onCheckedChange = { rewardedAvailable = it })
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = {
+                                val pts = rewardedPointsStr.toIntOrNull() ?: 50
+                                viewModel.updateAdConfig(
+                                    adConfig.copy(
+                                        publisherId = pubId,
+                                        rewardedAdUnitId = rewardedUnitId,
+                                        isAdEnabled = isAdEnabled,
+                                        rewardedAdsAvailable = rewardedAvailable,
+                                        rewardedPoints = pts
+                                    )
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Save Ad Configuration")
                         }
                     }
                 }

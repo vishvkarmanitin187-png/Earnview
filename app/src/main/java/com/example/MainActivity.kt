@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
           "wallet" -> WalletScreen(viewModel)
           "profile" -> ProfileScreen(viewModel)
           "streak" -> StreakScreen(viewModel)
+          "rewarded_ads" -> RewardedAdsScreen(viewModel)
           "achievements" -> AchievementsScreen(viewModel)
           "leaderboard" -> LeaderboardScreen(viewModel)
           "withdrawal" -> WithdrawalScreen(viewModel)
