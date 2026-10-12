@@ -1,0 +1,7 @@
+{
+  "name": "EarnView",
+  "description": "EarnView is a complete mobile-first rewards application where users complete tasks, track streaks, earn points, and manage withdrawals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
